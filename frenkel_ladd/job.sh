@@ -1,0 +1,29 @@
+#!/bin/bash
+# This bash script executes sequentially a seriers of LAMMPS simulations at different temperatures.
+# Usage: bash job.sh
+
+lammps="../../lammps/src/lmp_serial" # Path to LAMMPS executable.
+
+# Create directory structure for data output.
+mkdir -p data/logs
+mkdir -p data/thermo
+mkdir -p data/processed
+
+# Setup list of parameters to loop over.
+T=(   100    400    700   1000   1300   1600)
+a=(2.8841 2.9115 2.9315 2.9484 2.9637 2.9782)
+k=( 5.787  4.866  4.073  3.373  2.799  2.443)
+
+# Run job.
+for n in $(seq 0 5)
+do
+  printf "Running T = ${T[n]}K simulation.\n"
+  ${lammps} -in  in.lmp                        \
+            -log data/logs/lammps_${T[n]}K.log \
+            -screen none                       \
+            -var RANDOM ${RANDOM}              \
+            -var T ${T[n]}                     \
+            -var a ${a[n]}                     \
+            -var k ${k[n]}
+done
+wait

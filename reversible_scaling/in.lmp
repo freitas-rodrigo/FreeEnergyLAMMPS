@@ -1,0 +1,70 @@
+# This script runs a reversible-scaling thermodynamic integration for the calculation of the temperature dependence of the free energy of bcc iron. See job.sh for the variables that need to be passed on the command line.
+
+#----------------------------- Input variables --------------------------------#
+  # Initalizes random number generator.
+  variable         rnd equal round(random(0,999,${RANDOM}))
+
+  # Simulation control parameters.
+  variable         t_eq equal 5000 # Equilibration time.
+  variable         t equal 20000 # Simulation time.
+  variable         T equal 100 # Simulation temperature.
+#------------------------------------------------------------------------------#
+
+
+#---------------------------- Atomic setup ------------------------------------#
+  units            metal
+
+  # Define geometry and create atoms.
+  lattice          bcc 2.8841
+  region           sim_box block 0 5 0 5 0 5
+  create_box       1 sim_box
+  create_atoms     1 box
+
+  # Interatomic potential information.
+  pair_style       eam
+  pair_coeff       * * ../Fe.eam
+  neigh_modify     delay 0
+  timestep         0.002
+#------------------------------------------------------------------------------#
+
+
+#-------------------- Fixes, computes, and constraints ------------------------#
+  # Integrator for barostat + thermostat.
+  fix              f1 all nph iso 0.0 0.0 1.0
+  fix              f2 all temp/csvr ${T} ${T} 0.1 ${rnd}
+#------------------------------------------------------------------------------#
+
+
+#--------------------------- Output setup -------------------------------------#
+  # Thermo output.
+  thermo_style     custom step pe
+  thermo           100
+#------------------------------------------------------------------------------#
+
+
+#----------------------------- Run simulation ---------------------------------#
+  # Initial temperature to accelerate equilibration.
+  variable         rnd equal round(random(0,999,0)) # Generates new rnd #.
+  variable         T0 equal 1.7*${T}
+  velocity         all create ${T0} ${rnd} dist gaussian
+
+  # Forward integration.
+  run              ${t_eq}
+  print            "$(pe/atoms) 1.0" file data/forward.dat
+  variable         lambda equal 1/(1+(elapsed/${t})*(1600/$T-1))
+  fix              f3 all adapt 1 pair eam scale * * v_lambda
+  fix              f4 all print 1 "$(pe/atoms) ${lambda}" screen no &
+                   append data/forward.dat title "# pe lambda"
+  run              ${t}
+  unfix            f3
+  unfix            f4
+
+  # Backward integration. 
+  run              ${t_eq}
+  print            "$(pe/atoms) $(v_T/1600)" file data/backward.dat
+  variable         lambda equal 1/(1+(1-(elapsed/${t}))*(1600/$T-1))
+  fix              f3 all adapt 1 pair eam scale * * v_lambda
+  fix              f4 all print 1 "$(pe/atoms) ${lambda}" screen no &
+                   append data/backward.dat title "# pe lambda"
+  run              ${t}
+#------------------------------------------------------------------------------#
