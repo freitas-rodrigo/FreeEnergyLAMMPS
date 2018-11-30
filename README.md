@@ -67,6 +67,7 @@ If the code ran correctly you should obtain the following figure:
 <p align="center">
   <img src="https://i.ibb.co/KVdK7pp/fig-free-energy-vs-temperature.png" width="400"/>
 </p>
+
 This figure reproduce the results of Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
 
 ## Author & Contact
