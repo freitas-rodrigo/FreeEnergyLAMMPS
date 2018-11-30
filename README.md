@@ -1,9 +1,9 @@
 # Free-energy calculation of solids using LAMMPS
 This repository hosts a two examples on how to compute the free energy of solids using [LAMMPS](http://lammps.sandia.gov/). The methods for free-energy calculation are the Frenkel-Ladd and the Reversible Scaling. Details about algorithm implementation, syntax, and theoretical aspects can be found in
 
-["Nonequilibrium free-energy calculation of solids using LAMMPS" 
-Rodrigo Freitas, Mark Asta, and Maurice de Koning. 
-Computational Materials Science 
+["Nonequilibrium free-energy calculation of solids using LAMMPS"  
+Rodrigo Freitas, Mark Asta, and Maurice de Koning.  
+Computational Materials Science  
 DOI:10.1016/j.commatsci.2015.10.050](https://doi.org/10.1016/j.commatsci.2015.10.050)
 
 ## Installation
