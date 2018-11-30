@@ -1,6 +1,5 @@
 #!/bin/bash
-# This bash script executes sequentially a seriers of LAMMPS simulations at different temperatures.
-# Usage: bash job.sh
+# This script executes sequentially a series of LAMMPS simulations at different temperatures.
 
 lammps="../../lammps/src/lmp_serial" # Path to LAMMPS executable.
 
@@ -26,4 +25,3 @@ do
             -var a ${a[n]}                     \
             -var k ${k[n]}
 done
-wait

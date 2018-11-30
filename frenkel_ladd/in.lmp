@@ -1,25 +1,31 @@
 # This script runs a Frenkel-Ladd thermodynamic integration for the calculation of the free energy of bcc iron. See job.sh for the variables that need to be passed on the command line.
 
-#----------------------------- Input variables --------------------------------#
-  # Initalizes random number generator.
+
+#--------------------------- Simulation variables -----------------------------#
+  # Initalizes the random number generator.
   variable         rnd equal round(random(0,999,${RANDOM}))
 
   # Simulation control parameters.
   variable         t_eq equal 2000 # Equilibration time.
-  variable         t equal 10000 # Simulation time.
+  variable         t equal 10000 # Switching time.
+
+  # Redefine simulation time to capture first and last steps on output files.
+  # Notice that this does not affect the switching time.
+  variable         t_eq equal ${t_eq}-1
+  variable         t equal ${t}+1
 #------------------------------------------------------------------------------#
 
 
 #---------------------------- Atomic setup ------------------------------------#
   units            metal
 
-  # Define geometry and create atoms.
+  # Create atoms.
   lattice          bcc ${a}
   region           sim_box block 0 5 0 5 0 5
   create_box       1 sim_box
   create_atoms     1 box
 
-  # Interatomic potential information.
+  # Define interatomic potential.
   pair_style       eam
   pair_coeff       * * ../Fe.eam
   neigh_modify     delay 0
@@ -27,34 +33,23 @@
 #------------------------------------------------------------------------------#
 
 
-#-------------------- Fixes, computes, and constraints ------------------------#
+#----------------------------- Run simulation ---------------------------------#
+  # Setup thermo output.
+  thermo_style     custom step pe
+  thermo           0
+
   # Integrator, Frenkel-Ladd modifier, and thermostat.
   fix              f1 all nve 
   fix              f2 all ti/spring ${k} ${t} ${t_eq} function 2
   fix              f3 all temp/csvr ${T} ${T} 0.1 ${rnd}
-#------------------------------------------------------------------------------#
 
-
-#--------------------------- Output setup -------------------------------------#
   # Output variables.
   variable         dE equal pe-f_f2
   variable         lambda equal f_f2[1]
 
-  # Redefine simulation time to capture first and last steps on output files.
-  # Notice that this does not affect the switching time.
-  variable         t_eq equal ${t_eq}-1
-  variable         t equal ${t}+1
-
-  # Thermo output.
-  thermo_style     custom step pe
-  thermo           0
-#------------------------------------------------------------------------------#
-
-
-#----------------------------- Run simulation ---------------------------------#
   # Initial temperature to accelerate equilibration.
-  variable         rnd equal round(random(0,999,0)) # Generates new rnd #.
-  variable         T0 equal 1.7*${T}
+  variable         rnd equal round(random(0,666,0)) # Generates new rnd #.
+  variable         T0 equal 2*${T}
   velocity         all create ${T0} ${rnd} dist gaussian
 
   # Forward integration.

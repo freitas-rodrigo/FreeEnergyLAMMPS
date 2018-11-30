@@ -1,13 +1,13 @@
 # Free-energy calculation of solids using LAMMPS
-This repository hosts a set of examples on how to compute the free energy of solids using [LAMMPS](http://lammps.sandia.gov/). The methods for free-energy calculation are the Frenkel-Ladd and the Reversible Scaling. Details about the algorithm implementation, capabilities, and theoretical aspects of the  methods can be found in
+This repository hosts a two examples on how to compute the free energy of solids using [LAMMPS](http://lammps.sandia.gov/). The methods for free-energy calculation are the Frenkel-Ladd and the Reversible Scaling. Details about algorithm implementation, syntax, and theoretical aspects can be found in
 
 ["Nonequilibrium free-energy calculation of solids using LAMMPS" 
-Rodrigo Freitas, Mark Asta, and Maurice de Koning.
-Computational Materials Science
+Rodrigo Freitas, Mark Asta, and Maurice de Koning. 
+Computational Materials Science 
 DOI:10.1016/j.commatsci.2015.10.050](https://doi.org/10.1016/j.commatsci.2015.10.050)
 
 ## Installation
-LAMMPS needs to be compiled with some standard packages in order to be able to perform free energy calculations. In the examples included here we will be running LAMMPS in serial. Follow the following commands below in order to install LAMMPS. Starting from an empty directory use the following commands:
+LAMMPS needs to be compiled with some standard packages in order to be able to perform free energy calculations. Follow the commands below in order to install LAMMPS. Starting from an empty directory use the following commands:
 ```
 git clone https://github.com/lammps/lammps.git lammps
 cd lammps/src
@@ -24,15 +24,15 @@ git clone https://github.com/freitas-rodrigo/FreeEnergyLAMMPS.git
 cd FreeEnergyLAMMPS
 ```
 
-Now you should be ready to run free energy calculations of solids. Follow the examples below to reproduce Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
+Now you should be ready to run free-energy calculations of solids.
 
 ## Usage
-The documentation for the commands used during free-energy calculations is available [here](https://lammps.sandia.gov/doc/fix_ti_spring.html). Alternatively, a detail explanation of the method can be found [here](https://doi.org/10.1016/j.commatsci.2015.10.050).
+The documentation for the commands used during free-energy calculations is available [here](https://lammps.sandia.gov/doc/fix_ti_spring.html). Alternatively, a detailed explanation of the method can be found [here](https://doi.org/10.1016/j.commatsci.2015.10.050).
 
-Notice that `fix ti/spring` should be declared _before_ any other fix that modifies the forces on the particles (such as thermostats). This is necessary because one of the actions of `fix ti/spring` is to scale all forces acting on the particles, hence any forces added by `fix` commands declared before `fix rpmd` will be wrongly modified.
+Notice that in the LAMMPS input scripts, the `fix ti/spring` should be declared _before_ any other fix that modifies the forces on the particles (such as thermostats). This is necessary because one of the actions of `fix ti/spring` is to scale all forces acting on the particles, hence any forces added by `fix` commands declared before `fix ti/spring` will be wrongly modified.
 
 ## Examples
-The two examples below demonstrate how to compute the free energy of the body-centered cubic (bcc) phase of iron at zero pressure for temperatures ranging from 100K to 1600K. The interatomic potential employed is the EAM potential described [here](https://doi.org/10.1103/PhysRevB.57.5140), available in this repository: [`Fe.eam`](Fe.eam). By following the examples you should be able to reproduce Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
+The two examples below demonstrate how to compute the free energy of the body-centered cubic (bcc) phase of iron at zero pressure for temperatures ranging from 100K to 1600K. The interatomic potential employed is the EAM potential described [here](https://doi.org/10.1103/PhysRevB.57.5140), available in this repository: [`Fe.eam`](Fe.eam). By following the examples below you should be able to reproduce Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
 
 ### Example 1: Frenkel-Ladd method.
 The Frenkel-Ladd simulation can be run with the following commands:
@@ -40,7 +40,7 @@ The Frenkel-Ladd simulation can be run with the following commands:
 cd frenkel_ladd
 bash job.sh
 ```
-In my personal laptop it took about 40 seconds to run the calculation for 6 different temperatures. After the calculations are run, it is necessary to perform the lambdba integration and plot the results:
+In my personal laptop it took about 40 seconds to run the calculation for 6 different temperatures. After the calculations are done, it is necessary to perform the lambdba integration and plot the results:
 ```
 cd post_processing
 python integrate.py
