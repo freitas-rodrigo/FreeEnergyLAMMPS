@@ -24,7 +24,7 @@ fig = plt.figure()
 ax = fig.add_axes([0.15,0.15,0.80,0.80])
 
 # Plot.
-ax.plot(T, F, 'o-', c=c[0], lw=1)
+ax.plot(T, F, 'o', c=c[0], lw=1)
  
 # Add details and save figure.
 ax.set_xlabel(r'Temperature [K]')

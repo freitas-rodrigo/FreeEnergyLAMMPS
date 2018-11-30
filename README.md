@@ -48,7 +48,7 @@ python plot.py
 ```
 You will need python's modules [numpy](http://www.numpy.org/) and [matplotlib](https://matplotlib.org/) installed to run the post-processing scripts. If the code ran correctly you should obtain the following figure:
 <p align="center">
-  <img src="https://i.ibb.co/1JgfRwS/fig-free-energy-vs-temperature.png" width="400"/>
+  <img src="https://i.ibb.co/0hfDBMv/fig-free-energy-vs-temperature.png" width="400"/>
 </p>
 
 ### Example 2: Reversible Scaling method.
@@ -65,7 +65,7 @@ python plot.py
 ```
 If the code ran correctly you should obtain the following figure:
 <p align="center">
-  <img src="https://i.ibb.co/KVdK7pp/fig-free-energy-vs-temperature.png" width="400"/>
+  <img src="https://i.ibb.co/MpLFZkP/fig-free-energy-vs-temperature.png" width="400"/>
 </p>
 
 This figure reproduce the results of Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
