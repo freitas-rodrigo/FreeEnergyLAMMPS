@@ -9,9 +9,9 @@ from numpy import *
 import scipy.constants as sc
 
 # Input parameters.
-T = array([100,400,700,1000,1300,1600]) # [A].
-a = array([2.8841,2.9115,2.9315,2.9484,2.9637,2.9782]) # [eV/A^2].
-k = array([5.787,4.866,4.073,3.373,2.799,2.443]) # [K].
+T = array([100,400,700,1000,1300,1600]) # [K].
+a = array([2.8841,2.9115,2.9315,2.9484,2.9637,2.9782]) # [A].
+k = array([5.787,4.866,4.073,3.373,2.799,2.443]) # [eV/A^2].
 m = 55.845 # Iron mass [g/mol].
 natoms = 250 # Number of atoms.
 
