@@ -13,7 +13,7 @@ T0 = 100 # Reference temperature [K]
 kB = sc.value('Boltzmann constant in eV/K') 
 
 # Load free energy reference value.
-T, F0 = loadtxt('../../frenkel_ladd/data/processed/free_energy.dat', unpack=True)
+T, F0 = loadtxt('../../frenkel_ladd/data/free_energy.dat', unpack=True)
 F0 = F0[T==T0]
 
 # Load potential energy and lambda.

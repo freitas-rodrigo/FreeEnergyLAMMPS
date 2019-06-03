@@ -14,7 +14,7 @@ c = ['#E41A1C','#377EB8','#4DAF4A','#984EA3','#FF7F00','#FFFF33','#A65628','#F78
 ################################################################################
 
 T_rs, F_rs = loadtxt('../data/free_energy.dat', unpack=True)
-T_fl, F_fl = loadtxt('../../frenkel_ladd/data/processed/free_energy.dat', unpack=True, usecols=[0,1])
+T_fl, F_fl = loadtxt('../../frenkel_ladd/data/free_energy.dat', unpack=True, usecols=[0,1])
 
 ################################################################################
 # Plot.                                                                        #

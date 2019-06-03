@@ -50,7 +50,7 @@
   variable         lambda equal f_f2[1]
 
   # Initial temperature to accelerate equilibration.
-  variable         rnd equal round(random(0,666,0)) # Generates new rnd #.
+  variable         rnd equal round(random(1,666,0)) # Generates new rnd #.
   variable         T0 equal 2*${T}
   velocity         all create ${T0} ${rnd} dist gaussian
 

@@ -28,10 +28,10 @@ mu = sc.value('atomic mass constant')
 W = zeros(len(T)) # Reversible work for each temperature.
 for i in range(len(T)):
   # Forward integration.
-  dE, lamb = loadtxt('../data/thermo/forward_%dK.dat' % T[i], unpack=True)
+  dE, lamb = loadtxt('../data/forward_%dK.dat' % T[i], unpack=True)
   I_forw = trapz(dE,lamb)
   # Backward integration.
-  dE, lamb = loadtxt('../data//thermo/backward_%dK.dat' % T[i], unpack=True)
+  dE, lamb = loadtxt('../data/backward_%dK.dat' % T[i], unpack=True)
   I_back = trapz(dE,lamb)
   # Compute reversible work.
   W[i] = (I_forw-I_back) / 2
@@ -50,7 +50,7 @@ F_CM = (kB*T)*log((natoms/V) * (2*pi*kB*T / (natoms*m*omega**2))**(3/2)) # [eV].
 
 # Compute absolute free energy per atom [Eq.(16) in the paper] and save data.
 F = (F_harm + W + F_CM) / natoms # [eV/atom].
-savetxt('../data/processed/free_energy.dat', transpose([T,F]),
+savetxt('../data/free_energy.dat', transpose([T,F]),
         header='T [K] F [eV/atom]', fmt='%4d %.4f')
 
 ################################################################################
