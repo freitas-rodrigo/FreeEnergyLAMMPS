@@ -1,4 +1,4 @@
-# This script runs a Frenkel-Ladd thermodynamic integration for the calculation of the free energy of bcc iron. See job.sh for the variables that need to be passed on the command line.
+# This script runs a Frenkel-Ladd thermodynamic integration for the calculation of the free energy of bcc iron. See job.sh for the variables that need to be passed in the command line.
 
 
 #--------------------------- Simulation variables -----------------------------#
@@ -6,13 +6,8 @@
   variable         rnd equal round(random(0,999,${RANDOM}))
 
   # Simulation control parameters.
-  variable         t_eq equal 2000 # Equilibration time.
-  variable         t equal 10000 # Switching time.
-
-  # Redefine simulation time to capture first and last steps on output files.
-  # Notice that this does not affect the switching time.
-  variable         t_eq equal ${t_eq}-1
-  variable         t equal ${t}+1
+  variable         t_eq equal 1000 # Equilibration time.
+  variable         t equal 5000 # Switching time.
 #------------------------------------------------------------------------------#
 
 
@@ -34,16 +29,23 @@
 
 
 #----------------------------- Run simulation ---------------------------------#
-  # Setup thermo output.
-  thermo_style     custom step pe
-  thermo           0
-
   # Integrator, Frenkel-Ladd modifier, and thermostat.
   fix              f1 all nve 
   fix              f2 all ti/spring ${k} ${t} ${t_eq} function 2
-  fix              f3 all temp/csvr ${T} ${T} 0.1 ${rnd}
+  fix              f3 all langevin ${T} ${T} 0.1 ${rnd} zero yes
 
-  # Output variables.
+  # Compute temperature using COM coordinates.
+  compute          c1 all temp/com
+  fix_modify       f3 temp c1
+
+  # Redefine simulation time to capture first and last steps on output files.
+  # Notice that this does not affect the switching time.
+  variable         t_eq equal ${t_eq}-1
+  variable         t equal ${t}+1
+
+  # Setup thermo output.
+  thermo_style     custom step pe
+  thermo           0
   variable         dE equal pe-f_f2
   variable         lambda equal f_f2[1]
 
@@ -55,13 +57,13 @@
   # Forward integration.
   run              ${t_eq}
   fix              f4 all print 1 "${dE} ${lambda}" title "# dE [eV] lambda" &
-                   screen no file data/thermo/forward_${T}K.dat
+                   screen no file data/forward_${T}K.dat
   run              ${t}
   unfix            f4
 
   # Backward integration. 
   run              ${t_eq}
   fix              f4 all print 1 "${dE} ${lambda}" title "# dE [eV] lambda" &
-                   screen no file data/thermo/backward_${T}K.dat
+                   screen no file data/backward_${T}K.dat
   run              ${t}
 #------------------------------------------------------------------------------#

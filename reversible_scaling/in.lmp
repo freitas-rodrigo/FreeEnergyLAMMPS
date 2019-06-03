@@ -1,4 +1,4 @@
-# This script runs a reversible-scaling thermodynamic integration for the calculation of the temperature dependence of the free energy of bcc iron. See job.sh for the variables that need to be passed on the command line.
+# This script runs a Reversible Scaling thermodynamic integration for the calculation of the temperature dependence of the free energy of bcc iron. See job.sh for the variables that need to be passed in the command line.
 
 
 #--------------------------- Simulation variables -----------------------------#
@@ -6,8 +6,8 @@
   variable         rnd equal round(random(0,999,${RANDOM}))
 
   # Simulation control parameters.
-  variable         t_eq equal 5000 # Equilibration time.
-  variable         t equal 20000 # Switching time.
+  variable         t_eq equal 1000 # Equilibration time.
+  variable         t equal 10000 # Switching time.
   variable         T equal 100 # Simulation temperature.
 #------------------------------------------------------------------------------#
 
@@ -36,7 +36,12 @@
 
   # Integrator for barostat and thermostat.
   fix              f1 all nph iso 0 0 1
-  fix              f2 all temp/csvr ${T} ${T} 0.1 ${rnd}
+  fix              f2 all langevin ${T} ${T} 0.1 ${rnd} zero yes
+
+  # Compute temperature using center-of-mass coordinates.
+  compute          c1 all temp/com
+  fix_modify       f1 temp c1
+  fix_modify       f2 temp c1
 
   # Initial temperature to accelerate equilibration.
   variable         rnd equal round(random(0,666,0)) # Generates new rnd #.
