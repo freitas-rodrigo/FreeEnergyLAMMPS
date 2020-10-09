@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script executes sequentially a series of LAMMPS simulations at different temperatures.
 
-lammps="../../lammps/src/lmp_serial" # Path to LAMMPS executable.
+lammps="lmp_serial" # Path to LAMMPS executable.
 
 # Setup list of parameters to loop over.
 T=(   100    400    700   1000   1300   1600)
