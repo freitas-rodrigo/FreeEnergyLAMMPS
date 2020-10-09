@@ -1,7 +1,7 @@
 #!/bin/bash
 # This script executes a single LAMMPS simulations.
 
-lammps="../../lammps/src/lmp_serial" # Path to LAMMPS executable.
+lammps="lmp_serial" # Path to LAMMPS executable.
 
 mkdir -p data # Create directory structure for data output.
 
