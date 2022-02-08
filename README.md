@@ -69,7 +69,3 @@ If the code ran correctly you should obtain the following figure:
 </p>
 
 This figure reproduces the results of Figure 3 of [this](https://doi.org/10.1016/j.commatsci.2015.10.050) article.
-
-## Author & Contact
-
-Rodrigo Freitas | freitas@stanford.edu
