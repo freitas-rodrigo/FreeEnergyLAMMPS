@@ -11,7 +11,7 @@ LAMMPS needs to be compiled with some nonstandard packages in order to be able t
 ```
 git clone https://github.com/lammps/lammps.git lammps
 cd lammps/src
-cp USER-MISC/fix_ti_spring.* .
+cp EXTRA-FIX/fix_ti_spring.* .
 make yes-MANYBODY
 make -j 8 serial
 ```
