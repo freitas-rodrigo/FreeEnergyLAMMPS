@@ -34,15 +34,6 @@
   fix              f2 all ti/spring ${k} ${t} ${t_eq} function 2
   fix              f3 all langevin ${T} ${T} 0.1 ${rnd} zero yes
 
-  # Compute temperature using COM coordinates.
-  compute          c1 all temp/com
-  fix_modify       f3 temp c1
-
-  # Redefine simulation time to capture first and last steps on output files.
-  # Notice that this does not affect the switching time.
-  variable         t_eq equal ${t_eq}-1
-  variable         t equal ${t}+1
-
   # Setup thermo output.
   thermo_style     custom step pe
   thermo           0
@@ -50,9 +41,7 @@
   variable         lambda equal f_f2[1]
 
   # Initial temperature to accelerate equilibration.
-  variable         rnd equal round(random(1,666,0)) # Generates new rnd #.
-  variable         T0 equal 2*${T}
-  velocity         all create ${T0} ${rnd} dist gaussian
+  velocity         all create ${T} ${rnd} dist gaussian
 
   # Forward integration.
   run              ${t_eq}
