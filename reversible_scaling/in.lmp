@@ -9,6 +9,7 @@
   variable         t_eq equal 1000 # Equilibration time.
   variable         t equal 10000 # Switching time.
   variable         T equal 100 # Simulation temperature.
+  variable         P equal 0 # Simulation pressure.
 #------------------------------------------------------------------------------#
 
 
@@ -34,37 +35,27 @@
   thermo_style     custom step pe
   thermo           0
 
-  # Integrator for barostat and thermostat.
-  fix              f1 all nph iso 0 0 1
-  fix              f2 all langevin ${T} ${T} 0.1 ${rnd} zero yes
-
-  # Compute temperature using center-of-mass coordinates.
-  compute          c1 all temp/com
-  fix_modify       f1 temp c1
-  fix_modify       f2 temp c1
+  # Integrator, barostat, and thermostat.
+  fix              f1 all npt temp ${T} ${T} 0.1 iso ${P} ${P} 1
 
   # Initial temperature to accelerate equilibration.
-  variable         rnd equal round(random(0,666,0)) # Generates new rnd #.
-  variable         T0 equal 2*${T}
-  velocity         all create ${T0} ${rnd} dist gaussian
+  velocity         all create ${T} ${rnd} dist gaussian
 
   # Forward integration.
   run              ${t_eq}
-  print            "$(pe/atoms) 1" file data/forward.dat
   variable         lambda equal 1/(1+(elapsed/${t})*(1600/$T-1))
-  fix              f3 all adapt 1 pair eam scale * * v_lambda
-  fix              f4 all print 1 "$(pe/atoms) ${lambda}" screen no &
-                   append data/forward.dat title "# pe lambda"
+  fix              f2 all adapt 1 pair eam scale * * v_lambda
+  fix              f3 all print 1 "$(pe/atoms) ${lambda}" screen no &
+                   file data/forward.dat title "# pe lambda"
   run              ${t}
+  unfix            f2
   unfix            f3
-  unfix            f4
 
   # Backward integration. 
   run              ${t_eq}
-  print            "$(pe/atoms) $(v_T/1600)" file data/backward.dat
   variable         lambda equal 1/(1+(1-(elapsed/${t}))*(1600/$T-1))
-  fix              f3 all adapt 1 pair eam scale * * v_lambda
-  fix              f4 all print 1 "$(pe/atoms) ${lambda}" screen no &
-                   append data/backward.dat title "# pe lambda"
+  fix              f2 all adapt 1 pair eam scale * * v_lambda
+  fix              f3 all print 1 "$(pe/atoms) ${lambda}" screen no &
+                   file data/backward.dat title "# pe lambda"
   run              ${t}
 #------------------------------------------------------------------------------#
