@@ -46,7 +46,7 @@ F_harm = 3*natoms*kB*T * log(hbar*omega/(kB*T)) # [eV].
 
 # Fixed center of mass correction [Eq.(24) in the paper].
 V = (a**3/2) * natoms # Total volume.
-F_CM = (kB*T)*log((natoms/V) * (2*pi*kB*T / (natoms*m*omega**2))**(3/2)) # [eV].
+F_CM = (kB*T)*log((natoms/V) * (2*pi*kB*T / (natoms*k))**(3/2)) # [eV].
 
 # Compute absolute free energy per atom [Eq.(16) in the paper] and save data.
 F = (F_harm + W + F_CM) / natoms # [eV/atom].
